@@ -1,5 +1,13 @@
-Floron
-======
+This is a fork.of floron to run with minischeme 0.85, 
+modified by Nils M. Holm and PC-Scheme/Geneva under DOS.
+
+See [Changes.md] for changes in detail.
+
+Original Readme follows:
+
+
+Floron (original README)
+========================
 
 This is my static website generator. There are many like it, but this one is mine.
 

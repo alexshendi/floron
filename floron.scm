@@ -47,7 +47,7 @@
 (define (post-id obj) (list-ref obj 3))
 (define (post-body obj) (list-ref obj 4))
 (define (post? obj) (and (pair? obj) (= (length obj) 5) 
-			   (eq? (car obj) (symbol->string "#<post>"))))
+			   (eq? (car obj) (string->symbol "#<post>"))))
 
 (define (padded num)
   (let ((str (number->string num)))
@@ -73,7 +73,7 @@
 (define (blog-title obj) (cadr obj))
 (define (blog-author obj) (caddr obj))
 (define (blog? obj) (and (pair? obj) (= (length obj) 3) 
-			 (eq? (car obj) (symbol->string "#<blog>"))))
+			 (eq? (car obj) (string->symbol "#<blog>"))))
 
 (define (make-blog config)
   (let ((title  (fetch 'title config))
@@ -89,7 +89,7 @@
 (define (post-dir obj) (list-ref obj 3))
 (define (out-dir obj) (list-ref obj 4))
 (define (config? obj) (and (pair? obj) (= (length obj) 5) 
-			   (eq? (car obj) (symbol->string "#<config>"))))
+			   (eq? (car obj) (string->symbol "#<config>"))))
 
 (define (load-config)
   (let ((cfg (read-file "config.scm")))
