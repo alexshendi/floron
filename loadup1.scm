@@ -1,0 +1,6 @@
+(load "macros3.scm") 
+(load "sxml.fsl") 
+(load "mkdown.fsl")
+(load "floron.fsl")
+(render-blog)
+(exit)
