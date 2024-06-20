@@ -1,4 +1,5 @@
 (define *date-file* "date.txt")
+(define *path-sep* "/")
 
 (define (read-file f)
   (let ((r (with-input-from-file f read)))
@@ -12,8 +13,8 @@
   (with-output-to-file file
     (lambda () (display proc))))
 
-; (define (atom? x)
-;   (not (or (pair? x) (null? x))))
+(define (atom? x)
+  (not (or (pair? x) (null? x))))
 
 (define key car)
 (define value cadr)
@@ -63,7 +64,7 @@
         (id    (fetch 'id post)))
     (make-post-info title date id
       (with-input-from-file 
-        (string-append (post-dir config) "\\" id "\\post.md")
+        (string-append (post-dir config) *path-sep* id *path-sep* "post.md")
         markdown->sxml))))
 
 ;; Blog helpers
@@ -108,43 +109,43 @@
   (string-append page " | " root))
 
 (define (make-link file)
-  (string-append "\\" file))
+  (string-append *path-sep* file))
 
 (define (render-post post)
-  (render "templ\\post.scm"
+  (render (string-append "templ" *path-sep* "post.scm")
     `((post-body  ,(post-body post))
       (post-date  ,(post-date post))
       (post-title ,(post-title post)))))
 
 (define (render-post-page blog post)
-  (render "templ\\layout.scm"
+  (render (string-append "templ" *path-sep* "layout.scm")
     `((page-title   ,(page-title (post-title post) (blog-title blog)))
       (blog-title   ,(blog-title blog))
       (blog-author  ,(blog-author blog))
       (blog-content ,(render-post post)))))
 
 (define (render-index-item post)
-  (render "templ\\index.scm"
+  (render (string-append "templ" *path-sep* "index.scm")
     `((post-title ,(fetch 'title post))
       (post-date  ,(seconds->ymd))
       (post-desc  ,(fetch 'description post))
       (post-link  ,(make-link (fetch 'id post))))))
 
 (define (render-rss-item post)
-  (render "templ\\rssitem.scm"
+  (render (string-append "templ" *path-sep* "rssitem.scm")
      `((item-title ,(fetch 'title post))
        (item-desc ,(fetch 'description post))
        (item-link ,(make-link (fetch 'id post))))))
 
 (define (render-index blog posts)
-  (render "templ\\layout.scm"
+  (render (string-append "templ" *path-sep* "layout.scm")
     `((page-title   ,(page-title "Index" (blog-title blog)))
       (blog-title   ,(blog-title blog))
       (blog-author  ,(blog-author blog))
       (blog-content ,(map render-index-item posts)))))
 
 (define (render-rss blog posts)
-  (render "templ\\rss.scm"
+  (render (string-append "templ" *path-sep* "rss.scm")	
      `((rss-title ,(blog-title blog))
        (rss-item-list ,(map render-rss-item posts)))))
 
@@ -165,13 +166,13 @@
         (out   (out-dir config)))
     ;(for-each write (list posts out config)) (newline)
     ;(create-directory out 493)
-    (write-to-file (string-append out "\\index.html")
+    (write-to-file (string-append out *path-sep* "index.html")
                    (let ((xml (sxml->xml (render-index (config-blog config)
                                                        (config-posts config)))))
 		     ; (display xml) (newline) 
 		     xml))
 
-    (write-to-file (string-append out "\\rss.xml")
+    (write-to-file (string-append out *path-sep* "rss.xml")
                    (let ((xml (sxml->xml (render-rss (config-blog config)
                                                      (config-posts config)))))
 		     (string-append 
@@ -179,10 +180,10 @@
 		       xml)))	
     (for-each
       (lambda (post)
-        (let ((path (string-append out "\\" (post-id post)))
+        (let ((path (string-append out *path-sep* (post-id post)))
               (page (render-post-page (config-blog config) post)))
           ; (create-directory path 493)
-          (write-to-file (string-append path "\\index.html")
+          (write-to-file (string-append path *path-sep* "index.html")
                          (sxml->xml page))))
       posts)))
 

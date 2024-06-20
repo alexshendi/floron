@@ -58,7 +58,7 @@
 (define (display-1 obj ostr)
   (ostr 'disp obj))
 
-(define (newline-1 obj ostr)
+(define (newline-1 ostr)
   (ostr 'disp (string #\newline)))
 
 (define (write-char-1 ch ostr)
@@ -170,8 +170,8 @@
               (display-1 "<" out) (display-1 tag out)
               (for-each (lambda (x) (display-1 " " out) (display-1 x out)) rest)
               (display-1 ">" out)
-	      (newline-1 out
-			 (newline-1 out)))
+	      (newline-1 out)
+			 (newline-1 out))
              ((and (eq? '@raw tag)
                    (string? (car rest)))
               (if (not (null? (cdr rest)))
